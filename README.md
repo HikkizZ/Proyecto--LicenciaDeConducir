@@ -4,5 +4,5 @@
 
 - Esta es la base de codigo para el proyecto de ingeniería de software
 
-## [Ver el backend](./backend/Backend.md)
-## [Ver el frontend](./frontend/Frontend.md)
+## [Ver el-backend](./backend/Backend.md)
+## [Ver el-frontend](./frontend/Frontend.md)
