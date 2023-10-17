@@ -19,11 +19,11 @@ const especialistaSchema = new mongoose.Schema({
       dia: {
         type: String,
         enum: ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes'],
-        required: true,
+        //required: true,
       },
       horario: {
         type: String, //debemos ver como hacer para que sea un rango de horas
-        required: true,
+        //required: true,
       }
     }
   ],
