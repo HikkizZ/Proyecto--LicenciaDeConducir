@@ -7,32 +7,33 @@ const mongoose = require("mongoose");
 const citaSchema = new mongoose.Schema(
     {
         fecha: {
-          type: Date,
-          required: true,
+            type: Date,
+            required: true,
         },
         hora: {
             type: String,
             required: true,
           },
-          especialistaId: [
-            {
-              type: mongoose.Schema.Types.ObjectId,
-              ref: "Especialista",
-              required: true,
+        especialistaId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Especialista",
+            required: true,
             },
-          ],
-          usuarioId: [
-            {
-              type: mongoose.Schema.Types.ObjectId,
-              ref: "User",
-              required: true,
+        usuarioId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
             },
-          ],
-          estado: {
+        estado: {
             type: String,
             enum: ['Pendiente', 'Confirmada', 'Realizada', 'Cancelada'],
-            required: true,
-          }
+            default: 'Pendiente'
+          },
+          tipoExamen: {
+            type: String,
+            enum: ['Teorico', 'Practico', 'Vista', 'Psicotecnico'],
+            required: true
+        },
     },
     {
         versionKey: false,
@@ -40,7 +41,7 @@ const citaSchema = new mongoose.Schema(
 
 );
 
-const User = mongoose.model("Cita", userSchema);
+const Cita = mongoose.model("Cita", citaSchema);
 
 
-module.exports = Citas;
+module.exports = Cita;

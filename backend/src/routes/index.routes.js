@@ -15,6 +15,7 @@ const authenticationMiddleware = require("../middlewares/authentication.middlewa
 const router = express.Router();
 
 const especialistaRoutes = require("./especialista.routes.js");
+const citaRoutes = require("./cita.routes.js");
 
 // Define las rutas para los usuarios /api/usuarios
 router.use("/users", authenticationMiddleware, userRoutes);
@@ -23,6 +24,7 @@ router.use("/auth", authRoutes);
 
 //Define las rutas para los especialistas /api/especialistas
 router.use("/especialistas", especialistaRoutes);
+router.use("/citas", citaRoutes);
 
 // Exporta el enrutador
 module.exports = router;
