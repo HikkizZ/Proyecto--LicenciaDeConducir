@@ -1,4 +1,4 @@
-"use strict";
+/*"use strict";
 
 const Especialista = require("../models/especialista.model.js");
 const { handleError } = require("../utils/errorHandler");

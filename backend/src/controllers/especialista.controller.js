@@ -1,4 +1,4 @@
-"use strict";
+/*"use strict";
 
 const { respondSuccess, respondError } = require("../utils/resHandler");
 const EspecialistaService = require("../services/especialista.service");

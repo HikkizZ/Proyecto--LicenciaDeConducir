@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+/*const mongoose = require("mongoose");
 
 const especialistaSchema = new mongoose.Schema({
   nombre: {
