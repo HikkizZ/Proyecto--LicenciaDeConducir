@@ -44,10 +44,17 @@ async function actualizarCita(req, res) {
     if (error) return res.status(400).send({ message: error.details[0].message });
 
     try {
-        const citaActualizada = await Cita.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (!citaActualizada) {
+        const cita = await Cita.findById(req.params.id);
+        if (!cita) {
             return res.status(404).send({ message: 'Cita no encontrada' });
         }
+
+        // Verificar si el especialista autenticado es el mismo que está asociado a la cita
+        if (cita.especialistaId.toString() !== req.especialistaId.toString()) {
+            return res.status(403).send({ message: 'No tienes permiso para actualizar esta cita' });
+        }
+
+        const citaActualizada = await Cita.findByIdAndUpdate(req.params.id, req.body, { new: true });
         res.send(citaActualizada);
     } catch (error) {
         res.status(500).send({ message: 'Error al actualizar la cita' });
@@ -57,10 +64,17 @@ async function actualizarCita(req, res) {
 // Eliminar una cita
 async function eliminarCita(req, res) {
     try {
-        const citaEliminada = await Cita.findByIdAndDelete(req.params.id);
-        if (!citaEliminada) {
+        const cita = await Cita.findById(req.params.id);
+        if (!cita) {
             return res.status(404).send({ message: 'Cita no encontrada' });
         }
+
+        // Verificar si el especialista autenticado es el mismo que está asociado a la cita
+        if (cita.especialistaId.toString() !== req.especialistaId.toString()) {
+            return res.status(403).send({ message: 'No tienes permiso para eliminar esta cita' });
+        }
+
+        await Cita.findByIdAndDelete(req.params.id);
         res.send({ message: 'Cita eliminada correctamente' });
     } catch (error) {
         res.status(500).send({ message: 'Error al eliminar la cita' });

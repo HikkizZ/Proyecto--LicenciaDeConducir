@@ -44,6 +44,7 @@ async function isEspecialista(req, res, next) {
     const roles = await Role.find({ _id: { $in: user.roles } });
     for (let i = 0; i < roles.length; i++) {
       if (roles[i].name === "especialista") {
+        req.especialistaId = user._id;  // Anyade el ID del especialista al objeto req
         next();
         return;
       }
