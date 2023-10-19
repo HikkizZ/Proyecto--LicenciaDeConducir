@@ -1,7 +1,12 @@
 const Cita = require('../models/cita.model.js');
+const { citaBodySchema, citaIdSchema, citaUpdateSchema } = require('../schema/cita.schema');
+
 
 // Crear una nueva cita
 async function crearCita(req, res) {
+    const { error } = citaBodySchema.validate(req.body);
+    if (error) return res.status(400).send({ message: error.details[0].message });
+
     try {
         const nuevaCita = new Cita(req.body);
         await nuevaCita.save();
@@ -10,7 +15,6 @@ async function crearCita(req, res) {
         res.status(500).send({ message: 'Error al crear la cita' });
     }
 };
-
 // Obtener todas las citas
 async function obtenerCitas(req, res) {
     try {
@@ -35,7 +39,10 @@ async function obtenerCitaPorId(req, res)  {
 };
 
 // Actualizar una cita
-async function actualizarCita(req, res)  {
+async function actualizarCita(req, res) {
+    const { error } = citaUpdateSchema.validate(req.body);
+    if (error) return res.status(400).send({ message: error.details[0].message });
+
     try {
         const citaActualizada = await Cita.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!citaActualizada) {

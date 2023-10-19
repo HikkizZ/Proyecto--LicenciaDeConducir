@@ -32,6 +32,37 @@ async function isAdmin(req, res, next) {
   }
 }
 
+/**
+ * Comprueba si el usuario es especialista
+ * @param {Object} req - Objeto de petición
+ * @param {Object} res - Objeto de respuesta
+ * @param {Function} next - Función para continuar con la siguiente función
+ */
+async function isEspecialista(req, res, next) {
+  try {
+    const user = await User.findOne({ email: req.email });
+    const roles = await Role.find({ _id: { $in: user.roles } });
+    for (let i = 0; i < roles.length; i++) {
+      if (roles[i].name === "especialista") {
+        next();
+        return;
+      }
+    }
+    return respondError(
+      req,
+      res,
+      401,
+      "Se requiere un rol de especialista para realizar esta acción",
+    );
+  } catch (error) {
+    handleError(error, "authorization.middleware -> isEspecialista");
+  }
+}
+
+// Agrega la nueva función al objeto de exportación
 module.exports = {
   isAdmin,
+  isEspecialista,
 };
+
+
