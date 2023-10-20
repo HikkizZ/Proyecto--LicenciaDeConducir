@@ -18,7 +18,23 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      maxLength: 100,
     },
+    rut: {
+      type: String,
+    },
+    direccion: {
+      type: String,
+      maxLength: 100,
+    },
+    fechaNacimiento: {
+      type: Date,
+    },
+    telefono: {
+      type: Number,
+      minLength: 9,
+      maxLength: 15,  
+  },
     roles: [
       {
         type: mongoose.Schema.Types.ObjectId,
