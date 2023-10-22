@@ -18,10 +18,10 @@ async function getSolicitud(req, res) {
 
 
     } catch (error) {
-        handleError(error, "product.controller -> getProduct");
+        handleError(error, "solicitud.controller -> getSolicitud");
     }
 };
 
 module.exports = {
-    getProducts,
+    getSolicitud,
 };
