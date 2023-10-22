@@ -11,7 +11,7 @@ async function getSolicitud(req, res) {
     try {
         const solicitud = await Solicitud.find().exec();
         if (!solicitud) return [null,"No hay solicitudes"]
-        return [products,null];
+        return [solicitud,null];
 
     } catch (error) {
         handleError(error,"solicitud.service -> getSolicitud");
