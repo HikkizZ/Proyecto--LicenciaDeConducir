@@ -22,7 +22,7 @@ async function getUsers(req, res) {
     handleError(error, "user.controller -> getUsers");
     respondError(req, res, 400, error.message);
   }
-}
+};
 
 /**
  * Crea un nuevo usuario
@@ -47,7 +47,7 @@ async function createUser(req, res) {
     handleError(error, "user.controller -> createUser");
     respondError(req, res, 500, "No se creo el usuario");
   }
-}
+};
 
 /**
  * Obtiene un usuario por su id
@@ -69,7 +69,7 @@ async function getUserById(req, res) {
     handleError(error, "user.controller -> getUserById");
     respondError(req, res, 500, "No se pudo obtener el usuario");
   }
-}
+};
 
 /**
  * Actualiza un usuario por su id
@@ -94,7 +94,7 @@ async function updateUser(req, res) {
     handleError(error, "user.controller -> updateUser");
     respondError(req, res, 500, "No se pudo actualizar el usuario");
   }
-}
+};
 
 /**
  * Elimina un usuario por su id
@@ -121,7 +121,7 @@ async function deleteUser(req, res) {
     handleError(error, "user.controller -> deleteUser");
     respondError(req, res, 500, "No se pudo eliminar el usuario");
   }
-}
+};
 
 module.exports = {
   getUsers,
