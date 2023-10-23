@@ -12,7 +12,7 @@ async function getSolicitud() {
         handleError(error, 'solicitud.service -> getSolicitud');
         return [null, error.message];
     }
-}
+};
 
 async function updateSolicitud(id, solicitudData) {
     try {
@@ -23,9 +23,23 @@ async function updateSolicitud(id, solicitudData) {
         handleError(error, 'solicitud.service -> updateSolicitud');
         return [null, error.message];
     }
-}
+};
+
+async function createSolicitud(solicitudData) {
+    try {
+        const nuevaSolicitud = new Solicitud(solicitudData);
+        const solicitudGuardada = await nuevaSolicitud.save();
+        return [solicitudGuardada, null];
+    } catch (error) {
+        handleError(error, 'solicitud.service -> createSolicitud');
+        return [null, error.message];
+    }
+};
+
+
 
 module.exports = {
     getSolicitud,
     updateSolicitud,
+    createSolicitud,
 };
