@@ -3,7 +3,6 @@
 
 const Solicitud = require('../models/solicitud.model.js');
 const { handleError } = require('../utils/errorHandler.js');
-const { solicitudBodySchema } = require('../schema/solicitud.schema.js');
 
 async function getSolicitud() {
     try {
@@ -26,15 +25,8 @@ async function updateSolicitud(id, solicitudData) {
     }
 };
 
-
 async function createSolicitud(solicitudData) {
     try {
-        // Validar que los datos de solicitud cumplan con el esquema
-        const { error } = solicitudBodySchema.validate(solicitudData);
-        if (error) {
-            return [null, error.message];
-        }
-
         const nuevaSolicitud = new Solicitud(solicitudData);
         const solicitudGuardada = await nuevaSolicitud.save();
         return [solicitudGuardada, null];
@@ -42,7 +34,9 @@ async function createSolicitud(solicitudData) {
         handleError(error, 'solicitud.service -> createSolicitud');
         return [null, error.message];
     }
-}
+};
+
+
 
 module.exports = {
     getSolicitud,

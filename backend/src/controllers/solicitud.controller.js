@@ -82,6 +82,8 @@ async function createSolicitud(req, res) {
     }
 };
 
+
+
 module.exports = {
     getSolicitud,
     updateSolicitud,

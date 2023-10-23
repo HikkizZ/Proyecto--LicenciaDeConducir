@@ -4,12 +4,12 @@ const Joi = require('joi');
 
 const solicitudBodySchema = Joi.object({
   // Define las propiedades que deseas validar para la solicitud
-  idUsuario: Joi.string().required(),
-  nombre: Joi.string().required(),
-  rut: Joi.string().required(),
-  correo: Joi.string().email().required(),
-  fechaInicio: Joi.date().required(),
-  estado: Joi.string().valid("Pendiente", "Aceptada", "Rechazada", "Fuera de plazo").required(),
+  idUsuario: Joi.string(),
+  nombre: Joi.string(),
+  rut: Joi.string(),
+  correo: Joi.string().email(),
+  fechaInicio: Joi.date(),
+  estado: Joi.string(),
 });
 
 const solicitudIdSchema = Joi.object({
