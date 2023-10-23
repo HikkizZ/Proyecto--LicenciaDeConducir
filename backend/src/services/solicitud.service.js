@@ -25,17 +25,38 @@ async function updateSolicitud(id, solicitudData) {
     }
 };
 
+/**
+ * Crea una nueva solicitud en la base de datos
+ * @param {Object} solicitudData Datos de la solicitud
+ * @returns {Promise} Promesa con el objeto de solicitud creado
+ */
 async function createSolicitud(solicitudData) {
     try {
-        const nuevaSolicitud = new Solicitud(solicitudData);
-        const solicitudGuardada = await nuevaSolicitud.save();
-        return [solicitudGuardada, null];
+      const { IdUsuario, nombre, rut, correo, fechaInicio, estado } = solicitudData;
+  
+      // Verificar si el usuario (IdUsuario) existe en la base de datos
+      // Puedes agregar esta verificación si es necesario
+  
+      // Crear una nueva solicitud
+      const nuevaSolicitud = new Solicitud({
+        IdUsuario,
+        nombre,
+        rut,
+        correo,
+        fechaInicio,
+        estado,
+      });
+  
+      // Guardar la nueva solicitud en la base de datos
+      const solicitudGuardada = await nuevaSolicitud.save();
+  
+      return [solicitudGuardada, null];
     } catch (error) {
-        handleError(error, 'solicitud.service -> createSolicitud');
-        return [null, error.message];
+      handleError(error, "solicitud.service -> createSolicitud");
+      return [null, error.message];
     }
-};
-
+  }
+  
 
 
 module.exports = {
