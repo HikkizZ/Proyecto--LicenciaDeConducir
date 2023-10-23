@@ -13,6 +13,7 @@ const { handleError } = require("../utils/errorHandler.js");
  */
 async function isAdmin(req, res, next) {
   try {
+    console.log("Email usado para la consulta:", req.email);
     const user = await User.findOne({ email: req.email });
     const roles = await Role.find({ _id: { $in: user.roles } });
     for (let i = 0; i < roles.length; i++) {
@@ -38,9 +39,15 @@ async function isAdmin(req, res, next) {
  * @param {Object} res - Objeto de respuesta
  * @param {Function} next - Función para continuar con la siguiente función
  */
+
 async function isEspecialista(req, res, next) {
   try {
+    console.log("Email usado para la consulta:", req.email);
+
     const user = await User.findOne({ email: req.email });
+    if (!user) {
+      return respondError(req, res, 404, "Usuario no encontrado");
+  }
     const roles = await Role.find({ _id: { $in: user.roles } });
     for (let i = 0; i < roles.length; i++) {
       if (roles[i].name === "especialista") {

@@ -1,13 +1,14 @@
 "use strict";
 
 const Joi = require("joi");
+const currentDate = new Date();
 
 /**
  * Esquema de validación para la creacion de cita.
  * @constant {Object}
  */
 const citaBodySchema = Joi.object({
-    fecha: Joi.date().min('now').required().messages({
+    fecha: Joi.date().min(currentDate).required().messages({
         "date.base": "La fecha debe ser de tipo date.",
         "date.min": "La fecha no puede ser anterior a la fecha actual.",
         "any.required": "La fecha es obligatoria."
@@ -58,7 +59,7 @@ const citaIdSchema = Joi.object({
 
 const citaUpdateSchema = Joi.object({
     fecha: Joi.date()
-        .min(Joi.ref('now'))
+        .min(currentDate)
         .custom((value, helpers) => {
             const diffDays = (new Date(value) - new Date()) / (1000 * 60 * 60 * 24);
             if (diffDays < 7) {
@@ -67,7 +68,19 @@ const citaUpdateSchema = Joi.object({
             return value;
         })
         .required(),
-    // ... (resto del esquema sin cambios)
+    hora: Joi.string()
+        .required()
+        .messages({
+            "string.empty": "La hora no puede estar vacía.",
+            "any.required": "La hora es obligatoria.",
+            "string.base": "La hora debe ser de tipo string."
+        }),
+    estado: Joi.string()
+        .valid('Pendiente', 'Confirmada', 'Realizada', 'Cancelada')
+        .messages({
+            "string.base": "El estado debe ser de tipo string.",
+            "any.only": "El estado proporcionado no es válido."
+        })
 });
 
 module.exports = { citaBodySchema, citaIdSchema, citaUpdateSchema };
