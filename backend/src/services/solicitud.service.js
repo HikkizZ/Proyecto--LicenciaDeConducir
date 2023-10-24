@@ -5,18 +5,7 @@ const Solicitud = require("../models/solicitud.model.js");
 const { handleError } = require("../utils/errorHandler.js");
 
 
-async function getSolicitudes() {
-  try {
-    const solicitudes = await Solicitud.find();
-    if (!solicitudes) return [null, "No hay solicitudes"];
-
-    return [solicitudes, null];
-  } catch (error) {
-    handleError(error, "solicitudes.service -> getSolicitudes");
-  }
-}
-
-// Crea una solicitud 
+// Crea una solicitud para una id de ususario
 async function createSolicitud(id) {
   try {
    
@@ -34,33 +23,57 @@ async function createSolicitud(id) {
   }
 }
 
-/**
- * Obtiene un usuario por su id de la base de datos
- * @param {string} Id del usuario
- * @returns {Promise} Promesa con el objeto de usuario
- */
-async function getUserById(id) {
+// obtener todas las solicitudes
+async function getSolicitudes() {
   try {
-    const user = await User.findById({ _id: id })
-      .select("-password")
-      .populate("roles")
-      .exec();
+    const solicitudes = await Solicitud.find();
+    if (!solicitudes) return [null, "No hay solicitudes"];
 
-    if (!user) return [null, "El usuario no existe"];
-
-    return [user, null];
+    return [solicitudes, null];
   } catch (error) {
-    handleError(error, "user.service -> getUserById");
+    handleError(error, "solicitud.service -> getSolicitudes");
   }
 }
 
+
+//  obtener solicitudes por _id
+async function getSolicitudById(id) {
+  try {
+    const solicitud = await Solicitud.findById({ _id: id });
+
+    if (!solicitud) return [null, "La solicitud no existe"];
+
+    return [solicitud, null];
+  } catch (error) {
+    handleError(error, "solicitud.service -> getSolicitudById");
+  }
+}
+
+
+//  obtener solicitud por id de ususario (userId)
+async function getSolicitudByUserId(id) {
+  try {
+    const user = await User.findById({ _id: id });
+    if (!user) return [null, "El usuario no existe"];
+
+    const solicitud = await Solicitud.findOne({ userId: id });
+
+    if (!solicitud) return [null, "El usuario no posee solicitud"];
+
+    return [solicitud, null];
+  } catch (error) {
+    handleError(error, "solicitud.service -> getSolicitudByUserId");
+  }
+}
+
+
 /**
- * Actualiza un usuario por su id en la base de datos
+ * Actualiza una solicitud por su id en la base de datos
  * @param {string} id Id del usuario
  * @param {Object} user Objeto de usuario
  * @returns {Promise} Promesa con el objeto de usuario actualizado
  */
-async function updateUser(id, user) {
+async function updateSolicitud(id, user) {
   try {
     const userFound = await User.findById(id);
     if (!userFound) return [null, "El usuario no existe"];
@@ -98,23 +111,24 @@ async function updateUser(id, user) {
   }
 }
 
-/**
- * Elimina un usuario por su id de la base de datos
- * @param {string} Id del usuario
- * @returns {Promise} Promesa con el objeto de usuario eliminado
- */
-async function deleteUser(id) {
+
+// Elimina una solicitud por su _id
+async function deleteSolicitud(id) {
   try {
-    return await User.findByIdAndDelete(id);
+  
+    const solicitud = await Solicitud.findByIdAndDelete(id);
+    return [solicitud];
+
   } catch (error) {
-    handleError(error, "user.service -> deleteUser");
+    handleError(error, "solicitud.service -> deleteSolicitud");
   }
 }
 
 module.exports = {
-  getSolicitudes,
   createSolicitud,
-  getUserById,
-  updateUser,
-  deleteUser,
+  getSolicitudes,
+  getSolicitudById,
+  getSolicitudByUserId,
+  updateSolicitud,
+  deleteSolicitud,
 };
