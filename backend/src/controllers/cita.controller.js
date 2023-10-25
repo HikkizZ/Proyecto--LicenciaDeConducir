@@ -25,7 +25,7 @@ async function obtenerCitas(req, res) {
     }
 };
 
-// Obtener una cita por ID
+// Obtener una cita por ID de cita
 async function obtenerCitaPorId(req, res)  {
     try {
         const cita = await Cita.findById(req.params.id);
@@ -37,6 +37,40 @@ async function obtenerCitaPorId(req, res)  {
         res.status(500).send({ message: 'Error al obtener la cita' });
     }
 };
+
+
+//Obtener todas las citas de un especialista específico
+async function obtenerCitasEspecialista(req, res) {
+    try {
+        const especialistaId = req.params.id;
+        let citas;
+        if (especialistaId) {
+            citas = await Cita.find({ especialistaId: especialistaId });
+        } else {
+            citas = await Cita.find();
+        }
+        res.send(citas);
+    } catch (error) {
+        res.status(500).send({ message: 'Error al obtener las citas' });
+    }
+};
+
+// Obtener todas las citas de un usuario específico
+async function obtenerCitasUsuario(req, res) {
+    try {
+        const usuarioId = req.params.id;
+        let citas;
+        if (usuarioId) {
+            citas = await Cita.find({ usuarioId: usuarioId });
+        } else {
+            citas = await Cita.find();
+        }
+        res.send(citas);
+    } catch (error) {
+        res.status(500).send({ message: 'Error al obtener las citas del usuario' });
+    }
+};
+
 
 // Actualizar una cita
 async function actualizarCita(req, res) {
@@ -86,5 +120,7 @@ module.exports = {
     actualizarCita,
     obtenerCitas,
     obtenerCitaPorId,
+    obtenerCitasEspecialista,
+    obtenerCitasUsuario,
     crearCita,
 };
