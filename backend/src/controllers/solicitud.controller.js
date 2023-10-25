@@ -1,91 +1,116 @@
-"use strict"
+"use strict";
+const { respondSuccess, respondError } = require("../utils/resHandler");
+const SolicitudService = require("../services/solicitud.service");
+const UserService = require("../services/user.service")
+const { userBodySchema, userIdSchema } = require("../schema/user.schema");
+const { handleError } = require("../utils/errorHandler");
 
-const { respondSuccess, respondError } = require("../utils/resHandler.js");
-const SolicitudServicio = require("../services/solicitud.service.js");
-const { handleError } = require("../utils/errorHandler.js");
-// Importa los esquemas de solicitud desde solicitud.schema.js
-const { solicitudBodySchema, solicitudIdSchema } = require("../schema/solicitud.schema.js");
 
-/**
- * Actualiza una solicitud por su id
- * @param {Object} req - Objeto de petición
- * @param {Object} res - Objeto de respuesta
- */
-async function updateSolicitud(req, res) {
-    try {
-        const { params, body } = req;
-        const { error: paramsError } = solicitudIdSchema.validate(params);
-        if (paramsError) return respondError(req, res, 400, paramsError.message);
-
-        const { error: bodyError } = solicitudBodySchema.validate(body);
-        if (bodyError) return respondError(req, res, 400, bodyError.message);
-
-        const [solicitud, errorSolicitud] = await SolicitudServicio.updateSolicitud(params.id, body);
-
-        if (errorSolicitud) return respondError(req, res, 400, errorSolicitud);
-
-        respondSuccess(req, res, 200, solicitud);
-    } catch (error) {
-        handleError(error, 'solicitud.controller -> updateSolicitud');
-        respondError(req, res, 500, 'No se pudo actualizar la solicitud');
-    }
-}
-/**
- * Obtiene a todas las solicitudes
- * @param {Object} req - Objeto de petición
- * @param {Object} res - Objeto de respuesta
- */
-
-async function getSolicitud(req, res) {
-    try {
-        // Aquí puedes validar si es necesario, dependiendo de tu lógica, 
-        // pero si no es necesario, puedes omitir esta validación.
-        const { error: bodyError } = solicitudBodySchema.validate(req.body);
-        if (bodyError) return respondError(req, res, 400, bodyError.message);
-
-        const [solicitud, error] = await SolicitudServicio.getSolicitud();
-        if (error) return respondError(req, res, 404, error);
-
-        if (solicitud.length === 0) {
-            respondSuccess(req, res, 204);
-        } else {
-            respondSuccess(req, res, 200, solicitud);
-        }
-    } catch (error) {
-        handleError(error, "solicitud.controller -> getSolicitud");
-    }
-};
-
-/**
- * Crea una nueva solicitud
- * @param {Object} req - Objeto de petición
- * @param {Object} res - Objeto de respuesta
- */
-
+// crear solicitud por id de usuario
 async function createSolicitud(req, res) {
     try {
         const { body } = req;
-        const { error: bodyError } = solicitudBodySchema.validate(body);
-        if (bodyError) return respondError(req, res, 400, bodyError.message);
 
-        const [newSolicitud, errorSolicitud] = await SolicitudServicio.createSolicitud(body);
+        const [newSolicitud, solicitudError] = await SolicitudService.createSolicitud(body.id);
 
-        if (errorSolicitud) return respondError(req, res, 400, errorSolicitud);
+        if (solicitudError) return respondError(req, res, 400, solicitudError);
         if (!newSolicitud) {
-            return respondError(req, res, 400, "No se creó la solicitud");
+            return respondError(req, res, 400, "La solicitud no fue creada");
         }
 
         respondSuccess(req, res, 201, newSolicitud);
     } catch (error) {
         handleError(error, "solicitud.controller -> createSolicitud");
-        respondError(req, res, 500, "No se creó la solicitud");
+        respondError(req, res, 500, "La solicitud no fue creada");
     }
-};
+}
 
 
+// ver todas las solicitudes en la base de datos
+async function getSolicitudes(req, res) {
+    try {
+        const [solicitudes, errorSolicitudes] = await SolicitudService.getSolicitudes();
+        if (errorSolicitudes) return respondError(req, res, 404, errorSolicitudes);
+
+        solicitudes.length === 0
+            ? respondSuccess(req, res, 204)
+            : respondSuccess(req, res, 200, solicitudes);
+    } catch (error) {
+        handleError(error, "solicitud.controller -> getSolicitudes");
+        respondError(req, res, 400, error.message);
+    }
+}
+
+
+// ver solicitud por id de usuario 
+async function getSolicitudByUserId(req, res) {
+    try {
+        const { params } = req;
+        const { error: paramsError } = userIdSchema.validate(params);
+        if (paramsError) return respondError(req, res, 400, paramsError.message);
+
+        const [user, errorUser] = await UserService.getUserById(params.id);
+
+        if (errorUser) return respondError(req, res, 404, errorUser);
+
+        const [solicitud, errorSolicitud] = await SolicitudService.getSolicitudByUserId(params.id);
+        if (errorSolicitud) return respondError(req, res, 404, errorSolicitud);
+
+        respondSuccess(req, res, 200, solicitud);
+    } catch (error) {
+        handleError(error, "solicitud.controller -> getSolicitudByUserId");
+        respondError(req, res, 500, "No se pudo obtener la solicitud");
+    }
+}
+
+/**
+ * Actualiza un usuario por su id
+ * @param {Object} req - Objeto de petición
+ * @param {Object} res - Objeto de respuesta
+ */
+async function updateUser(req, res) {
+    try {
+        const { params, body } = req;
+        const { error: paramsError } = userIdSchema.validate(params);
+        if (paramsError) return respondError(req, res, 400, paramsError.message);
+
+        const { error: bodyError } = userBodySchema.validate(body);
+        if (bodyError) return respondError(req, res, 400, bodyError.message);
+
+        const [user, userError] = await UserService.updateUser(params.id, body);
+
+        if (userError) return respondError(req, res, 400, userError);
+
+        respondSuccess(req, res, 200, user);
+    } catch (error) {
+        handleError(error, "user.controller -> updateUser");
+        respondError(req, res, 500, "No se pudo actualizar el usuario");
+    }
+}
+
+
+// Elimina una solicitud por su _id
+async function deleteSolicitud(req, res) {
+    try {
+
+        const { params } = req;
+        console.log("el params.id:", params.id);
+        const [solicitud, errorSolicitud] = await SolicitudService.deleteSolicitud(params.id);
+        if (errorSolicitud) return respondError(req, res, 404, errorSolicitud);
+
+        solicitud.length === 0
+            ? respondSuccess(req, res, 204)
+            : respondSuccess(req, res, 200, solicitud);
+
+    } catch (error) {
+        handleError(error, "solocitud.controller -> deleteSolicitud");
+        respondError(req, res, 500, "No se pudo eliminar la solicitud");
+    }
+}
 
 module.exports = {
-    getSolicitud,
-    updateSolicitud,
+    getSolicitudes,
     createSolicitud,
-};                      
+    getSolicitudByUserId,
+    deleteSolicitud,
+};

@@ -1,16 +1,18 @@
-'use strict';
+// Importa el modulo 'express' para crear las rutas
+const express = require("express");
 
-const express = require('express');
-const solicitudController = require('../controllers/solicitud.controller.js');
+/** Controlador de autenticación */
+const solicitudController = require("../controllers/solicitud.controller");
+
+/** Instancia del enrutador */
 const router = express.Router();
 
-// Ruta para obtener una solicitud por su ID
-router.get('/', solicitudController.getSolicitud);
+// Define las rutas para las solicitudes
+router.post("/", solicitudController.createSolicitud);
+router.get("/", solicitudController.getSolicitudes);
+router.get("/:id", solicitudController.getSolicitudByUserId);
+router.delete("/:id", solicitudController.deleteSolicitud);
 
-// Ruta para actualizar una solicitud por su ID
-router.put('/:id', solicitudController.updateSolicitud);
 
-// Ruta para crear una nueva solicitud
-router.post('/', solicitudController.createSolicitud);
-
+// Exporta el enrutador
 module.exports = router;
