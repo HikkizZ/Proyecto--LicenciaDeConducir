@@ -6,8 +6,10 @@ const authenticationMiddleware = require("../middlewares/authentication.middlewa
 
 router.use(authenticationMiddleware);
 router.post('/', citaController.crearCita);
-router.get('/', citaController.obtenerCitas);
-router.get('/:id', citaController.obtenerCitaPorId);
+router.get('/', authMiddleware.isEspecialista, citaController.obtenerCitas);
+router.get('/especialista/:id', authMiddleware.isEspecialista, citaController.obtenerCitasEspecialista);
+router.get('/usuario/:id', authMiddleware.isEspecialista, citaController.obtenerCitasUsuario);
+router.get('/:id', authMiddleware.isEspecialista, citaController.obtenerCitaPorId);
 router.put('/:id', authMiddleware.isEspecialista, citaController.actualizarCita);
 router.delete('/:id', authMiddleware.isEspecialista, citaController.eliminarCita);
 
