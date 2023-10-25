@@ -70,7 +70,7 @@ async function createSolicitud(solicitudData) {
         fechaInicio,
         estado,
       });
-  
+
       // Guardar la nueva solicitud en la base de datos
       const solicitudGuardada = await nuevaSolicitud.save();
   
@@ -79,12 +79,26 @@ async function createSolicitud(solicitudData) {
       handleError(error, "solicitud.service -> createSolicitud");
       return [null, error.message];
     }
-  }
+  };
   
+
+
+  async function getSolicitudById(id) {
+    try {
+      const solicitud = await Solicitud.findOne({ IdUsuario: id }); // Actualiza la consulta para reflejar el nuevo modelo de usuario
+  
+      if (!solicitud) return [null, "La solicitud no existe"];
+  
+      return [solicitud, null];
+    } catch (error) {
+      handleError(error, "solicitud.service -> getSolicitudById");
+    }
+  };
 
 
 module.exports = {
     getSolicitud,
     updateSolicitud,
     createSolicitud,
+    getSolicitudById,
 };

@@ -14,4 +14,7 @@ router.put('/:id', isAdmin, solicitudController.updateSolicitud); // Aplica el m
 // Ruta para crear una nueva solicitud
 router.post('/', solicitudController.createSolicitud);
 
+// Ruta para obtener una solicitud por su ID
+router.get('/:id', solicitudController.getSolicitudById); 
+
 module.exports = router;

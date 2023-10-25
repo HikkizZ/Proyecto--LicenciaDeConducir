@@ -15,27 +15,6 @@ const { solicitudBodySchema, solicitudIdSchema } = require("../schema/solicitud.
  * @param {Object} req - Objeto de petición
  * @param {Object} res - Objeto de respuesta
  */
-async function updateSolicitud(req, res) {
-    try {
-        const { params, body } = req;
-        const { error: paramsError } = solicitudIdSchema.validate(params);
-        if (paramsError) return respondError(req, res, 400, paramsError.message);
-
-        const { error: bodyError } = solicitudBodySchema.validate(body);
-        if (bodyError) return respondError(req, res, 400, bodyError.message);
-
-        const [solicitud, errorSolicitud] = await SolicitudServicio.updateSolicitud(params.id, body);
-
-        if (errorSolicitud) return respondError(req, res, 400, errorSolicitud);
-
-        respondSuccess(req, res, 200, solicitud);
-    } catch (error) {
-        handleError(error, 'solicitud.controller -> updateSolicitud');
-        respondError(req, res, 500, 'No se pudo actualizar la solicitud');
-    }
-};
-
-
 
 async function updateSolicitud(req, res) {
     try {
@@ -44,7 +23,7 @@ async function updateSolicitud(req, res) {
         if (paramsError) return respondError(req, res, 400, paramsError.message);
 
         // Utiliza la función isAdmin en lugar de esAdministrador
-        isAdmin(req, res, async function() {
+        isAdmin(req, res, async function () {
             // Agregar validación para el estado (ejemplo: solo el administrador puede modificar el estado)
             if (body.estado && !isAdmin(req)) {
                 return respondError(req, res, 403, "No tienes permiso para modificar el estado");
@@ -134,9 +113,30 @@ async function createSolicitud(req, res) {
 };
 
 
+async function getSolicitudById(req, res) {
+    try {
+        const { params } = req;
+        const { error: paramsError } = userIdSchema.validate(params);
+        if (paramsError) return respondError(req, res, 400, paramsError.message);
+
+        const [user, errorUser] = await User.findById(params.id);
+
+        if (errorUser) return respondError(req, res, 404, errorUser);
+
+        const [solicitud, errorSolicitud] = await SolicitudService.getSolicitudById(params.id);
+        if (errorSolicitud) return respondError(req, res, 404, errorSolicitud);
+
+        respondSuccess(req, res, 200, solicitud);
+    } catch (error) {
+        handleError(error, "solicitud.controller -> getSolicitudById");
+        respondError(req, res, 500, "No se pudo obtener la solicitud");
+    }
+}
+
 
 module.exports = {
     getSolicitud,
     updateSolicitud,
     createSolicitud,
+    getSolicitudById,
 };                      
