@@ -14,40 +14,16 @@ async function getSolicitud() {
     }
 };
 
-
-
-async function updateSolicitud(id, solicitudData, isAdmin) {
-  try {
-      const solicitud = await Solicitud.findById(id);
-
-      if (!solicitud) {
-          return [null, 'La solicitud no existe'];
-      }
-
-      // Verificar si el usuario es administrador y si ha pasado menos de 72 horas
-      if (!isAdmin) {
-          if (solicitud.estado !== "Pendiente") {
-              return [null, 'No puedes modificar una solicitud que no está pendiente.'];
-          }
-
-          const tiempoTranscurrido = new Date() - solicitud.fechaInicio;
-          if (tiempoTranscurrido > 72 * 60 * 60 * 1000) {
-              return [null, 'Ha pasado más de 72 horas, no puedes modificar la solicitud.'];
-          }
-      }
-
-      // Realizar la actualización de la solicitud
-      const updatedSolicitud = await Solicitud.findByIdAndUpdate(id, solicitudData, { new: true }).exec();
-      
-      return [updatedSolicitud, null];
-  } catch (error) {
-      handleError(error, 'solicitud.service -> updateSolicitud');
-      return [null, error.message];
-  }
-}
-
-
-
+async function updateSolicitud(id, solicitudData) {
+    try {
+        const solicitud = await Solicitud.findByIdAndUpdate(id, solicitudData, { new: true }).exec();
+        if (!solicitud) return [null, 'La solicitud no existe'];
+        return [solicitud, null];
+    } catch (error) {
+        handleError(error, 'solicitud.service -> updateSolicitud');
+        return [null, error.message];
+    }
+};
 
 /**
  * Crea una nueva solicitud en la base de datos
@@ -70,7 +46,7 @@ async function createSolicitud(solicitudData) {
         fechaInicio,
         estado,
       });
-
+  
       // Guardar la nueva solicitud en la base de datos
       const solicitudGuardada = await nuevaSolicitud.save();
   
@@ -79,26 +55,12 @@ async function createSolicitud(solicitudData) {
       handleError(error, "solicitud.service -> createSolicitud");
       return [null, error.message];
     }
-  };
+  }
   
-
-
-  async function getSolicitudById(id) {
-    try {
-      const solicitud = await Solicitud.findOne({ IdUsuario: id }); // Actualiza la consulta para reflejar el nuevo modelo de usuario
-  
-      if (!solicitud) return [null, "La solicitud no existe"];
-  
-      return [solicitud, null];
-    } catch (error) {
-      handleError(error, "solicitud.service -> getSolicitudById");
-    }
-  };
 
 
 module.exports = {
     getSolicitud,
     updateSolicitud,
     createSolicitud,
-    getSolicitudById,
 };
