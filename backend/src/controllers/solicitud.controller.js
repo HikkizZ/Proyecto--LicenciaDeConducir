@@ -19,7 +19,7 @@ async function createSolicitud(req, res) {
     try {
         const { body } = req;
 
-        const [newSolicitud, solicitudError] = await SolicitudService.createSolicitud(body.id);
+        const [newSolicitud, solicitudError] = await SolicitudService.createSolicitud(body.userId);
 
         if (solicitudError) return respondError(req, res, 400, solicitudError);
         if (!newSolicitud) {
