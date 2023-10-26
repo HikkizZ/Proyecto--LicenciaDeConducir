@@ -8,7 +8,7 @@ const solicitudController = require("../controllers/solicitud.controller");
 const router = express.Router();
 
 // Define las rutas para las solicitudes
-router.post("/", solicitudController.createSolicitud);
+router.post("/:id", solicitudController.createSolicitud);
 router.get("/", solicitudController.getSolicitudes);
 router.get("/:id", solicitudController.getSolicitudByUserId);
 router.delete("/:id", solicitudController.deleteSolicitud);

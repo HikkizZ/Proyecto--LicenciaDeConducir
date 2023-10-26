@@ -8,9 +8,14 @@ const { handleError } = require("../utils/errorHandler.js");
 // Crea una solicitud para una id de ususario
 async function createSolicitud(id) {
   try {
-   
+
+    //verificar que el usuario existe
     const user = await User.findById({ _id: id });
-    if (!user) return [null, "El usuario no existe"];
+    if (!user) return [null, "Error, El usuario no existe"];
+
+    // Comprobar si usuario tiene solicitudes existentes.
+    const solicitudFound = await Solicitud.findOne({userId: id});
+    if (solicitudFound) return [null, "Error, Ya existe una solicitud"]
     
     const newSolicitud = new Solicitud({
       userId: id,
@@ -19,7 +24,7 @@ async function createSolicitud(id) {
 
     return [newSolicitud, null];
   } catch (error) {
-    handleError(error, "user.solicitud -> createSolicitud");
+    handleError(error, "solicitud.service -> createSolicitud");
   }
 }
 
@@ -27,7 +32,7 @@ async function createSolicitud(id) {
 async function getSolicitudes() {
   try {
     const solicitudes = await Solicitud.find();
-    if (!solicitudes) return [null, "No hay solicitudes"];
+    if (solicitudes.length === 0) return [null, "No hay solicitudes"];
 
     return [solicitudes, null];
   } catch (error) {
@@ -53,11 +58,12 @@ async function getSolicitudById(id) {
 //  obtener solicitud por id de ususario (userId)
 async function getSolicitudByUserId(id) {
   try {
+
+    //verificar que el usuario existe
     const user = await User.findById({ _id: id });
-    if (!user) return [null, "El usuario no existe"];
+    if (!user) return [null, "Error, El usuario no existe"];
 
     const solicitud = await Solicitud.findOne({ userId: id });
-
     if (!solicitud) return [null, "El usuario no posee solicitud"];
 
     return [solicitud, null];
@@ -67,55 +73,15 @@ async function getSolicitudByUserId(id) {
 }
 
 
-/**
- * Actualiza una solicitud por su id en la base de datos
- * @param {string} id Id del usuario
- * @param {Object} user Objeto de usuario
- * @returns {Promise} Promesa con el objeto de usuario actualizado
- */
-async function updateSolicitud(id, user) {
-  try {
-    const userFound = await User.findById(id);
-    if (!userFound) return [null, "El usuario no existe"];
-
-    const { username, email, password, newPassword, roles } = user;
-
-    const matchPassword = await User.comparePassword(
-      password,
-      userFound.password,
-    );
-
-    if (!matchPassword) {
-      return [null, "La contraseña no coincide"];
-    }
-
-    const rolesFound = await Role.find({ name: { $in: roles } });
-    if (rolesFound.length === 0) return [null, "El rol no existe"];
-
-    const myRole = rolesFound.map((role) => role._id);
-
-    const userUpdated = await User.findByIdAndUpdate(
-      id,
-      {
-        username,
-        email,
-        password: await User.encryptPassword(newPassword || password),
-        roles: myRole,
-      },
-      { new: true },
-    );
-
-    return [userUpdated, null];
-  } catch (error) {
-    handleError(error, "user.service -> updateUser");
-  }
-}
-
 
 // Elimina una solicitud por su _id
 async function deleteSolicitud(id) {
   try {
   
+    // Comprobar si la solicitud existe
+    const solicitudFound = await Solicitud.findOne({_id: id});
+    if (!solicitudFound) return [null, "Error, La solicitud no existe"]
+
     const solicitud = await Solicitud.findByIdAndDelete(id);
     return [solicitud];
 
@@ -129,6 +95,5 @@ module.exports = {
   getSolicitudes,
   getSolicitudById,
   getSolicitudByUserId,
-  updateSolicitud,
   deleteSolicitud,
 };
