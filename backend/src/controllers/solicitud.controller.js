@@ -1,9 +1,17 @@
 "use strict";
 const { respondSuccess, respondError } = require("../utils/resHandler");
-const SolicitudService = require("../services/solicitud.service");
-const UserService = require("../services/user.service")
-const { userBodySchema, userIdSchema } = require("../schema/user.schema");
 const { handleError } = require("../utils/errorHandler");
+
+const UserService = require("../services/user.service");
+const SolicitudService = require("../services/solicitud.service");
+
+
+const { userBodySchema, userIdSchema } = require("../schema/user.schema");
+const { solicitudBodySchema, solicitudIdSchema } = require("../schema/solicitud.schema.js");
+
+
+
+
 
 
 // crear solicitud por id de usuario

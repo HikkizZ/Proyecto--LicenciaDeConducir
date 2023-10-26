@@ -37,4 +37,4 @@ const solicitudIdSchema = Joi.object({
 });
 
 
-module.exports = {solicitudBodySchema,solicitudIdSchema,};
+module.exports = {solicitudBodySchema,solicitudIdSchema};
