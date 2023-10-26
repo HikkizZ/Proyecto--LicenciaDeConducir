@@ -72,30 +72,29 @@ async function getSolicitudByUserId(req, res) {
 }
 
 /**
- * Actualiza un usuario por su id
+ * Actualiza una solicitud por su id
  * @param {Object} req - Objeto de petición
  * @param {Object} res - Objeto de respuesta
  */
-async function updateUser(req, res) {
+async function updateSolicitud(req, res) {
     try {
         const { params, body } = req;
-        const { error: paramsError } = userIdSchema.validate(params);
+        const { error: paramsError } = solicitudIdSchema.validate(params);
         if (paramsError) return respondError(req, res, 400, paramsError.message);
 
-        const { error: bodyError } = userBodySchema.validate(body);
+        const { error: bodyError } = solicitudBodySchema.validate(body);
         if (bodyError) return respondError(req, res, 400, bodyError.message);
 
-        const [user, userError] = await UserService.updateUser(params.id, body);
+        const [solicitud, errorSolicitud] = await SolicitudServicio.updateSolicitud(params.id, body);
 
-        if (userError) return respondError(req, res, 400, userError);
+        if (errorSolicitud) return respondError(req, res, 400, errorSolicitud);
 
-        respondSuccess(req, res, 200, user);
+        respondSuccess(req, res, 200, solicitud);
     } catch (error) {
-        handleError(error, "user.controller -> updateUser");
-        respondError(req, res, 500, "No se pudo actualizar el usuario");
+        handleError(error, 'solicitud.controller -> updateSolicitud');
+        respondError(req, res, 500, 'No se pudo actualizar la solicitud');
     }
-}
-
+};
 
 // Elimina una solicitud por su _id
 async function deleteSolicitud(req, res) {
@@ -121,4 +120,5 @@ module.exports = {
     createSolicitud,
     getSolicitudByUserId,
     deleteSolicitud,
+    updateSolicitud,
 };

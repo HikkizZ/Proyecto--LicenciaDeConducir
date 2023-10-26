@@ -12,6 +12,7 @@ router.post("/", solicitudController.createSolicitud);
 router.get("/", solicitudController.getSolicitudes);
 router.get("/:id", solicitudController.getSolicitudByUserId);
 router.delete("/:id", solicitudController.deleteSolicitud);
+router.put("/:id", solicitudController.updateSolicitud);
 
 
 // Exporta el enrutador

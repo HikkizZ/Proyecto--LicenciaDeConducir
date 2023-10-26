@@ -67,49 +67,16 @@ async function getSolicitudByUserId(id) {
 }
 
 
-/**
- * Actualiza una solicitud por su id en la base de datos
- * @param {string} id Id del usuario
- * @param {Object} user Objeto de usuario
- * @returns {Promise} Promesa con el objeto de usuario actualizado
- */
-async function updateSolicitud(id, user) {
+async function updateSolicitud(id, solicitudData) {
   try {
-    const userFound = await User.findById(id);
-    if (!userFound) return [null, "El usuario no existe"];
-
-    const { username, email, password, newPassword, roles } = user;
-
-    const matchPassword = await User.comparePassword(
-      password,
-      userFound.password,
-    );
-
-    if (!matchPassword) {
-      return [null, "La contraseña no coincide"];
-    }
-
-    const rolesFound = await Role.find({ name: { $in: roles } });
-    if (rolesFound.length === 0) return [null, "El rol no existe"];
-
-    const myRole = rolesFound.map((role) => role._id);
-
-    const userUpdated = await User.findByIdAndUpdate(
-      id,
-      {
-        username,
-        email,
-        password: await User.encryptPassword(newPassword || password),
-        roles: myRole,
-      },
-      { new: true },
-    );
-
-    return [userUpdated, null];
+      const solicitud = await Solicitud.findByIdAndUpdate(id, solicitudData, { new: true }).exec();
+      if (!solicitud) return [null, 'La solicitud no existe'];
+      return [solicitud, null];
   } catch (error) {
-    handleError(error, "user.service -> updateUser");
+      handleError(error, 'solicitud.service -> updateSolicitud');
+      return [null, error.message];
   }
-}
+};
 
 
 // Elimina una solicitud por su _id
