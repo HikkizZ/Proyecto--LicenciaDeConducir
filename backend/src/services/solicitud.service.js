@@ -67,17 +67,17 @@ async function getSolicitudByUserId(id) {
 }
 
 
-async function updateSolicitud(id, solicitudData) {
+async function updateSolicitud(id, data) {
   try {
-      const solicitud = await Solicitud.findByIdAndUpdate(id, solicitudData, { new: true }).exec();
-      if (!solicitud) return [null, 'La solicitud no existe'];
+      const solicitud = await Solicitud.findByIdAndUpdate(id, data, { new: true });
+
+      if (!solicitud) return [null, "La solicitud no existe"];
+
       return [solicitud, null];
   } catch (error) {
-      handleError(error, 'solicitud.service -> updateSolicitud');
-      return [null, error.message];
+      handleError(error, "solicitud.service -> updateSolicitud");
   }
-};
-
+}
 
 // Elimina una solicitud por su _id
 async function deleteSolicitud(id) {

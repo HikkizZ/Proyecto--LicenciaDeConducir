@@ -7,6 +7,7 @@ const SolicitudService = require("../services/solicitud.service");
 
 
 const { userBodySchema, userIdSchema } = require("../schema/user.schema");
+
 const { solicitudBodySchema, solicitudIdSchema } = require("../schema/solicitud.schema.js");
 
 
@@ -82,19 +83,15 @@ async function updateSolicitud(req, res) {
         const { error: paramsError } = solicitudIdSchema.validate(params);
         if (paramsError) return respondError(req, res, 400, paramsError.message);
 
-        const { error: bodyError } = solicitudBodySchema.validate(body);
-        if (bodyError) return respondError(req, res, 400, bodyError.message);
-
-        const [solicitud, errorSolicitud] = await SolicitudServicio.updateSolicitud(params.id, body);
-
-        if (errorSolicitud) return respondError(req, res, 400, errorSolicitud);
+        const [solicitud, errorSolicitud] = await SolicitudService.updateSolicitud(params.id, body);
+        if (errorSolicitud) return respondError(req, res, 404, errorSolicitud);
 
         respondSuccess(req, res, 200, solicitud);
     } catch (error) {
-        handleError(error, 'solicitud.controller -> updateSolicitud');
-        respondError(req, res, 500, 'No se pudo actualizar la solicitud');
+        handleError(error, "solicitud.controller -> updateSolicitud");
+        respondError(req, res, 500, "No se pudo actualizar la solicitud");
     }
-};
+}
 
 // Elimina una solicitud por su _id
 async function deleteSolicitud(req, res) {
