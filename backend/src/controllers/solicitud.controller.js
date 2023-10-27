@@ -3,6 +3,7 @@ const { respondSuccess, respondError } = require("../utils/resHandler");
 const SolicitudService = require("../services/solicitud.service");
 const UserService = require("../services/user.service")
 const { userBodySchema, userIdSchema } = require("../schema/user.schema");
+const { solicitudBodySchema, solicitudIdSchema } = require("../schema/solicitud.schema.js");
 const { handleError } = require("../utils/errorHandler");
 
 
