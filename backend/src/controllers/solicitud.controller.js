@@ -75,7 +75,7 @@ async function deleteSolicitud(req, res) {
       : respondSuccess(req, res, 200, solicitud);
       
   } catch (error) {
-    handleError(error, "solocitud.controller -> deleteSolicitud");
+    handleError(error, "solicitud.controller -> deleteSolicitud");
     respondError(req, res, 500, "No se pudo eliminar la solicitud");
   }
 }
