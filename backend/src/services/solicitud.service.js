@@ -90,10 +90,45 @@ async function deleteSolicitud(id) {
   }
 }
 
+
+// Actualiza una solicitud por la id de la solicitud
+async function updateSolicitud(id, data) {
+  try {
+      const solicitud = await Solicitud.findById(id);
+      if (!solicitud) {
+          return [null, "La solicitud no existe"];
+      }
+
+      const horaLimite = new Date(solicitud.fechaCreacion.getTime() + (72 * 60 * 60 * 1000)); 
+      const horaActual = new Date();
+
+      if (horaActual <= horaLimite) {
+          const updatedSolicitud = await Solicitud.findByIdAndUpdate(id, data, { new: true });
+          if (!updatedSolicitud) {
+              return [null, "La solicitud no pudo ser actualizada"];
+          }
+          return [updatedSolicitud, null];
+      } else {
+   
+          const updateData = { estado: "fuera de plazo", ...data };
+          const updatedSolicitud = await Solicitud.findByIdAndUpdate(id, updateData, { new: true });
+          if (!updatedSolicitud) {
+              return [null, "La solicitud no pudo ser actualizada"];
+          }
+          return [updatedSolicitud, null];
+      }
+  } catch (error) {
+      handleError(error, "solicitud.service -> updateSolicitud");
+      return [null, "No se pudo actualizar la solicitud"];
+  }
+};
+
+
 module.exports = {
   createSolicitud,
   getSolicitudes,
   getSolicitudById,
   getSolicitudByUserId,
   deleteSolicitud,
+  updateSolicitud,
 };

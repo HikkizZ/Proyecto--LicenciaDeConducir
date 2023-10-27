@@ -20,7 +20,9 @@ router.use(authenticationMiddleware);
 router.post("/:id", solicitudController.createSolicitud);
 router.get("/", solicitudController.getSolicitudes);
 router.get("/:id", solicitudController.getSolicitudByUserId);
-router.delete("/:id", solicitudController.deleteSolicitud);
+router.delete("/:id",authorizationMiddleware.isAdmin ,solicitudController.deleteSolicitud);
+router.put("/:id",authorizationMiddleware.isAdmin ,solicitudController.updateSolicitud);
+
 
 
 // Exporta el enrutador

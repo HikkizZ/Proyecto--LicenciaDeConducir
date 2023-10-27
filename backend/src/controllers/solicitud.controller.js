@@ -80,9 +80,44 @@ async function deleteSolicitud(req, res) {
   }
 }
 
+
+// Actualiza una solicitud por la id de la solicitud
+async function updateSolicitud(req, res) {
+  try {
+      const { params, body } = req;
+      const { error: paramsError } = solicitudIdSchema.validate(params);
+      if (paramsError) return respondError(req, res, 400, paramsError.message);
+      const { error: bodyError } = solicitudBodySchema.validate(body);
+      if (bodyError) return respondError(req, res, 400, bodyError.message);
+
+      const [solicitud, errorSolicitud] = await SolicitudService.getSolicitudById(params.id);
+      if (errorSolicitud) return respondError(req, res, 404, errorSolicitud);
+
+
+      const horaLimite = new Date(solicitud.fechaCreacion.getTime() + (72 * 60 * 60 * 1000)); 
+      const horaActual = new Date();
+
+      if (horaActual <= horaLimite) {
+
+          const [updatedSolicitud, updateError] = await SolicitudService.updateSolicitud(params.id, body);
+          if (updateError) return respondError(req, res, 404, updateError);
+          respondSuccess(req, res, 200, updatedSolicitud);
+      } else {
+  
+          const [updatedSolicitud, updateError] = await SolicitudService.updateSolicitud(params.id, { estado: "fuera de plazo" });
+          if (updateError) return respondError(req, res, 404, updateError);
+          respondSuccess(req, res, 200, updatedSolicitud);
+      }
+  } catch (error) {
+      handleError(error, "solicitud.controller -> updateSolicitud");
+      respondError(req, res, 500, "No se pudo actualizar la solicitud");
+  }
+};
+
 module.exports = {
   getSolicitudes,
   createSolicitud,
   getSolicitudByUserId,
   deleteSolicitud,
+  updateSolicitud,
 };
