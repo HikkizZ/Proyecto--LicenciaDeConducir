@@ -115,9 +115,41 @@ async function eliminarCita(req, res) {
     }
 };
 
+// Actualizar el estado de una cita
+// Actualizar el estado de una cita
+async function actualizarEstadoCita(req, res) {
+    const { estado } = req.body;
+
+    // Validar el estado
+    const estadosValidos = ["Pendiente", "Confirmada", "Cancelada", "Realizada"];
+    if (!estadosValidos.includes(estado)) {
+        return res.status(400).send({ message: 'Estado no válido' });
+    }
+
+    try {
+        const cita = await Cita.findById(req.params.id);
+        if (!cita) {
+            return res.status(404).send({ message: 'Cita no encontrada' });
+        }
+
+        if (cita.especialistaId.toString() !== req.especialistaId.toString()) {// Verificar si el especialista autenticado es el mismo que está asociado a la cita
+            return res.status(403).send({ message: 'No tienes permiso para actualizar el estado de esta cita' });
+        }
+
+        const citaActualizada = await Cita.findByIdAndUpdate(req.params.id, { estado: estado }, { new: true }); // Actualizar solo el campo estado
+
+        res.send({ message: 'Estado de cita actualizado correctamente', cita: citaActualizada });
+    } catch (error) {
+        res.status(500).send({ message: 'Error al actualizar el estado de la cita' });
+    }
+};
+
+
+
 module.exports = {
     eliminarCita,
-    actualizarCita,
+    actualizarCita, //con la restriccion de una semana antes de la fecha actual
+    actualizarEstadoCita,
     obtenerCitas,
     obtenerCitaPorId,
     obtenerCitasEspecialista,
