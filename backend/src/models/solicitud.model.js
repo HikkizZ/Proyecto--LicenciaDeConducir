@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const solicitudSchema = new mongoose.Schema({
+
   userId: {
     type: Schema.ObjectId,
     ref: "user",

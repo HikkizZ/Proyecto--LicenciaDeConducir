@@ -7,12 +7,8 @@ const userRoutes = require("./user.routes.js");
 /** Enrutador de autenticación */
 const authRoutes = require("./auth.routes.js");
 
-/** Enrutador de solicitud*/
-const solicitudRoutes = require("./solicitud.routes.js");
-
 /** Middleware de autenticación */
 const authenticationMiddleware = require("../middlewares/authentication.middleware.js");
-
 
 /** Instancia del enrutador */
 const router = express.Router();
@@ -23,7 +19,6 @@ const citaRoutes = require("./cita.routes.js");
 
 // Define las rutas para los usuarios /api/usuarios
 router.use("/users", authenticationMiddleware, userRoutes);
-
 // Define las rutas para la autenticación /api/auth
 router.use("/auth", authRoutes);
 
