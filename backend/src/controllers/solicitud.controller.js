@@ -83,6 +83,10 @@ async function updateSolicitud(req, res) {
         const { error: paramsError } = solicitudIdSchema.validate(params);
         if (paramsError) return respondError(req, res, 400, paramsError.message);
 
+        // Validar los atributos del objeto body según solicitudBodySchema
+        const { error: bodyError } = solicitudBodySchema.validate(body);
+        if (bodyError) return respondError(req, res, 400, bodyError.message);
+
         const [solicitud, errorSolicitud] = await SolicitudService.updateSolicitud(params.id, body);
         if (errorSolicitud) return respondError(req, res, 404, errorSolicitud);
 
@@ -91,7 +95,8 @@ async function updateSolicitud(req, res) {
         handleError(error, "solicitud.controller -> updateSolicitud");
         respondError(req, res, 500, "No se pudo actualizar la solicitud");
     }
-}
+};
+
 
 // Elimina una solicitud por su _id
 async function deleteSolicitud(req, res) {
