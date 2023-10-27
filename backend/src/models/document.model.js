@@ -1,32 +1,38 @@
+// Modelo de documentos o archivos con CommonsJS
 "use strict";
-// Importa el modulo 'mongoose' para crear la conexion a la base de datos
+
 const mongoose = require("mongoose");
 
-// Crea el esquema de la coleccion 'documentos'
+// Modelo de documentos o archivos
 const documentSchema = new mongoose.Schema(
     {
-        nombre: {
-            type: String,
-            required: true,
-        },
-        archivo: {
-            type: String,
-            required: true,
-        },
-        usuarioId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-            required: true,
-        },
-        estado: {
-            type: String,
-            enum: ['Pendiente', 'Aprobado', 'Rechazado'],
-            default: 'Pendiente'
-        },
+    // nombre: {
+    //     type: String,
+    //     required: true,
+    // },
+    filename: {
+        type: String,
+        required: true,
+    },
+    url: {
+        type: String,
+        required: true,
+    },
+    // usuarioId: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "User",
+    //     required: true,
+    // },
+    estado: {
+        type: String,
+        enum: ["pendiente", "aprobado", "rechazado"],
+        default: "pendiente",
+    },
     },
     {
-        versionKey: false,
-    }
+    versionKey: false,
+    timestamps: true,
+    },
 );
 
 const Document = mongoose.model("Document", documentSchema);
