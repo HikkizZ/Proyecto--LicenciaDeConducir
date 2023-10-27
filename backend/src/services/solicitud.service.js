@@ -9,14 +9,9 @@ const { handleError } = require("../utils/errorHandler.js");
 async function createSolicitud(id) {
   try {
 
-    //verificar que el usuario existe
     const user = await User.findById({ _id: id });
-    if (!user) return [null, "Error, El usuario no existe"];
+    if (!user) return [null, "El usuario no existe"];
 
-    // Comprobar si usuario tiene solicitudes existentes.
-    const solicitudFound = await Solicitud.findOne({userId: id});
-    if (solicitudFound) return [null, "Error, Ya existe una solicitud"]
-    
     const newSolicitud = new Solicitud({
       userId: id,
     });
@@ -24,24 +19,24 @@ async function createSolicitud(id) {
 
     return [newSolicitud, null];
   } catch (error) {
-    handleError(error, "solicitud.service -> createSolicitud");
+    handleError(error, "user.solicitud -> createSolicitud");
   }
-}
+};
 
-// obtener todas las solicitudes
+// Obtener todas las solicitudes
 async function getSolicitudes() {
   try {
     const solicitudes = await Solicitud.find();
-    if (solicitudes.length === 0) return [null, "No hay solicitudes"];
+    if (!solicitudes) return [null, "No hay solicitudes"];
 
     return [solicitudes, null];
   } catch (error) {
     handleError(error, "solicitud.service -> getSolicitudes");
   }
-}
+};
 
 
-//  obtener solicitudes por _id
+// Obtener solicitudes por id de solicitud
 async function getSolicitudById(id) {
   try {
     const solicitud = await Solicitud.findById({ _id: id });
@@ -52,35 +47,60 @@ async function getSolicitudById(id) {
   } catch (error) {
     handleError(error, "solicitud.service -> getSolicitudById");
   }
-}
+};
 
 
-//  obtener solicitud por id de ususario (userId)
+// Obtener solicitud por id de ususario (userId)
 async function getSolicitudByUserId(id) {
   try {
-
-    //verificar que el usuario existe
     const user = await User.findById({ _id: id });
-    if (!user) return [null, "Error, El usuario no existe"];
+    if (!user) return [null, "El usuario no existe"];
 
     const solicitud = await Solicitud.findOne({ userId: id });
+
     if (!solicitud) return [null, "El usuario no posee solicitud"];
 
     return [solicitud, null];
   } catch (error) {
     handleError(error, "solicitud.service -> getSolicitudByUserId");
   }
-}
+};
 
+// Actualiza una solicitud por la id de la solicitud
+async function updateSolicitud(id, data) {
+  try {
+      const solicitud = await Solicitud.findById(id);
+      if (!solicitud) {
+          return [null, "La solicitud no existe"];
+      }
 
+      const horaLimite = new Date(solicitud.fechaCreacion.getTime() + (72 * 60 * 60 * 1000)); 
+      const horaActual = new Date();
 
-// Elimina una solicitud por su _id
+      if (horaActual <= horaLimite) {
+          const updatedSolicitud = await Solicitud.findByIdAndUpdate(id, data, { new: true });
+          if (!updatedSolicitud) {
+              return [null, "La solicitud no pudo ser actualizada"];
+          }
+          return [updatedSolicitud, null];
+      } else {
+   
+          const updateData = { estado: "fuera de plazo", ...data };
+          const updatedSolicitud = await Solicitud.findByIdAndUpdate(id, updateData, { new: true });
+          if (!updatedSolicitud) {
+              return [null, "La solicitud no pudo ser actualizada"];
+          }
+          return [updatedSolicitud, null];
+      }
+  } catch (error) {
+      handleError(error, "solicitud.service -> updateSolicitud");
+      return [null, "No se pudo actualizar la solicitud"];
+  }
+};
+
+// Elimina una solicitud por id de la solicitud
 async function deleteSolicitud(id) {
   try {
-  
-    // Comprobar si la solicitud existe
-    const solicitudFound = await Solicitud.findOne({_id: id});
-    if (!solicitudFound) return [null, "Error, La solicitud no existe"]
 
     const solicitud = await Solicitud.findByIdAndDelete(id);
     return [solicitud];
@@ -95,5 +115,6 @@ module.exports = {
   getSolicitudes,
   getSolicitudById,
   getSolicitudByUserId,
+  updateSolicitud,
   deleteSolicitud,
 };
