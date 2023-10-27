@@ -20,7 +20,7 @@ async function createRoles() {
       new Role({ name: "user" }).save(),
       new Role({ name: "admin" }).save(),
       new Role({ name: "especialista" }).save(), // Agregar el nuevo rol "especialista"
-      new Role({ name: "especialista" }).save(), // Agregar el nuevo rol "especialista"
+
     ]);
     console.log("* => Roles creados exitosamente");
   } catch (error) {
@@ -42,7 +42,7 @@ async function createUsers() {
     const admin = await Role.findOne({ name: "admin" });
     const user = await Role.findOne({ name: "user" });
     const especialista = await Role.findOne({ name: "especialista" }); // Agregar la búsqueda del rol "especialista"
-    const especialista = await Role.findOne({ name: "especialista" }); // Agregar la búsqueda del rol "especialista"
+ 
 
     await Promise.all([
       new User({
