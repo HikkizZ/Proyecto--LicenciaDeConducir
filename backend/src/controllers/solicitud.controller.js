@@ -1,18 +1,10 @@
 "use strict";
 const { respondSuccess, respondError } = require("../utils/resHandler");
 const { handleError } = require("../utils/errorHandler");
-
 const UserService = require("../services/user.service");
 const SolicitudService = require("../services/solicitud.service");
-
-
 const { userBodySchema, userIdSchema } = require("../schema/user.schema");
-
 const { solicitudBodySchema, solicitudIdSchema } = require("../schema/solicitud.schema.js");
-
-
-
-
 
 
 // crear solicitud por id de usuario
@@ -32,10 +24,10 @@ async function createSolicitud(req, res) {
         handleError(error, "solicitud.controller -> createSolicitud");
         respondError(req, res, 500, "La solicitud no fue creada");
     }
-}
+};
 
 
-// ver todas las solicitudes en la base de datos
+// Ver todas las solicitudes en la base de datos
 async function getSolicitudes(req, res) {
     try {
         const [solicitudes, errorSolicitudes] = await SolicitudService.getSolicitudes();
@@ -48,10 +40,10 @@ async function getSolicitudes(req, res) {
         handleError(error, "solicitud.controller -> getSolicitudes");
         respondError(req, res, 400, error.message);
     }
-}
+};
 
 
-// ver solicitud por id de usuario 
+// Ver solicitud por el id del usuario 
 async function getSolicitudByUserId(req, res) {
     try {
         const { params } = req;
@@ -70,38 +62,44 @@ async function getSolicitudByUserId(req, res) {
         handleError(error, "solicitud.controller -> getSolicitudByUserId");
         respondError(req, res, 500, "No se pudo obtener la solicitud");
     }
-}
+};
 
-/**
- * Actualiza una solicitud por su id
- * @param {Object} req - Objeto de petición
- * @param {Object} res - Objeto de respuesta
- */
+// Actualiza una solicitud por la id de la solicitud
 async function updateSolicitud(req, res) {
     try {
         const { params, body } = req;
         const { error: paramsError } = solicitudIdSchema.validate(params);
         if (paramsError) return respondError(req, res, 400, paramsError.message);
-
-        // Validar los atributos del objeto body según solicitudBodySchema
         const { error: bodyError } = solicitudBodySchema.validate(body);
         if (bodyError) return respondError(req, res, 400, bodyError.message);
 
-        const [solicitud, errorSolicitud] = await SolicitudService.updateSolicitud(params.id, body);
+        const [solicitud, errorSolicitud] = await SolicitudService.getSolicitudById(params.id);
         if (errorSolicitud) return respondError(req, res, 404, errorSolicitud);
 
-        respondSuccess(req, res, 200, solicitud);
+ 
+        const horaLimite = new Date(solicitud.fechaCreacion.getTime() + (72 * 60 * 60 * 1000)); 
+        const horaActual = new Date();
+
+        if (horaActual <= horaLimite) {
+  
+            const [updatedSolicitud, updateError] = await SolicitudService.updateSolicitud(params.id, body);
+            if (updateError) return respondError(req, res, 404, updateError);
+            respondSuccess(req, res, 200, updatedSolicitud);
+        } else {
+    
+            const [updatedSolicitud, updateError] = await SolicitudService.updateSolicitud(params.id, { estado: "fuera de plazo" });
+            if (updateError) return respondError(req, res, 404, updateError);
+            respondSuccess(req, res, 200, updatedSolicitud);
+        }
     } catch (error) {
         handleError(error, "solicitud.controller -> updateSolicitud");
         respondError(req, res, 500, "No se pudo actualizar la solicitud");
     }
 };
 
-
-// Elimina una solicitud por su _id
+// Elimina una solicitud por id de la solicitud
 async function deleteSolicitud(req, res) {
     try {
-
         const { params } = req;
         console.log("el params.id:", params.id);
         const [solicitud, errorSolicitud] = await SolicitudService.deleteSolicitud(params.id);
@@ -115,7 +113,7 @@ async function deleteSolicitud(req, res) {
         handleError(error, "solocitud.controller -> deleteSolicitud");
         respondError(req, res, 500, "No se pudo eliminar la solicitud");
     }
-}
+};
 
 module.exports = {
     getSolicitudes,
