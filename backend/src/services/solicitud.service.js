@@ -28,6 +28,7 @@ async function createSolicitud(id) {
   }
 }
 
+
 // obtener todas las solicitudes
 async function getSolicitudes() {
   try {
@@ -71,7 +72,6 @@ async function getSolicitudByUserId(id) {
     handleError(error, "solicitud.service -> getSolicitudByUserId");
   }
 }
-
 
 
 // Elimina una solicitud por su _id
