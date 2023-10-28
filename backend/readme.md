@@ -17,4 +17,3 @@ Requisito 3:
 * Los administradores tienen la capacidad de ver (`get`) y editar (`put`) el `estado` de los formularios.
 * Si `admin` modifica el `estado` de una solicitud a `aprobado`, se notificará al usuario correspondiente y se generará una agenda de disponibilidad.
 
-//hola como están

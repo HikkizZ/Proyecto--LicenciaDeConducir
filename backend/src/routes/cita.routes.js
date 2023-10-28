@@ -11,7 +11,6 @@ router.get('/especialista/:id', authMiddleware.isEspecialista, citaController.ob
 router.get('/usuario/:id', authMiddleware.isEspecialista, citaController.obtenerCitasUsuario);
 router.get('/:id', authMiddleware.isEspecialista, citaController.obtenerCitaPorId);
 router.put('/:id', authMiddleware.isEspecialista, citaController.actualizarCita);
-router.put('/estado/:id', authMiddleware.isEspecialista, citaController.actualizarEstadoCita);
 router.delete('/:id', authMiddleware.isEspecialista, citaController.eliminarCita);
 
 module.exports = router;

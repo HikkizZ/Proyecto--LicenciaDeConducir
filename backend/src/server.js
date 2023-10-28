@@ -16,6 +16,8 @@ const { setupDB } = require("./config/configDB.js");
 const { handleFatalError, handleError } = require("./utils/errorHandler.js");
 const { createRoles, createUsers } = require("./config/initialSetup");
 
+
+
 /**
  * Inicia el servidor web
  */
