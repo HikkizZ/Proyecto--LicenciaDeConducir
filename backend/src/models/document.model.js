@@ -6,17 +6,12 @@ const mongoose = require("mongoose");
 // Modelo de documentos o archivos
 const documentSchema = new mongoose.Schema(
     {
-    // nombre: {
-    //     type: String,
-    //     required: true,
-    // },
-    filename: {
+    nombre: {
         type: String,
         required: true,
     },
-    url: {
+    image: {
         type: String,
-        required: true,
     },
     // usuarioId: {
     //     type: mongoose.Schema.Types.ObjectId,
@@ -35,6 +30,6 @@ const documentSchema = new mongoose.Schema(
     },
 );
 
-const Document = mongoose.model("Document", documentSchema);
+const Document = new mongoose.model("Document", documentSchema);
 
 module.exports = Document;

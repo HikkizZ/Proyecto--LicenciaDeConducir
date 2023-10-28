@@ -8,16 +8,6 @@ const documentBodySchema = Joi.object({
         "any.required": "El nombre es obligatorio.",
         "string.base": "El nombre debe ser de tipo string.",
     }),
-    filename: Joi.string().required().messages({
-        "string.empty": "El nombre del archivo no puede estar vacío.",
-        "any.required": "El nombre del archivo es obligatorio.",
-        "string.base": "El nombre del archivo debe ser de tipo string.",
-    }),
-    url: Joi.string().required().messages({
-        "string.empty": "La URL no puede estar vacía.",
-        "any.required": "La URL es obligatoria.",
-        "string.base": "La URL debe ser de tipo string.",
-    }),
     usuarioId: Joi.string().required().messages({
         "string.empty": "El ID del usuario no puede estar vacío.",
         "any.required": "El ID del usuario es obligatorio.",
