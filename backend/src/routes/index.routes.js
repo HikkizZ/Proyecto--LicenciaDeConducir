@@ -16,6 +16,8 @@ const router = express.Router();
 /** Enrutadores de la API */
 const solocitudRoutes = require("./solicitud.routes.js");
 const citaRoutes = require("./cita.routes.js");
+/** Enrutador de documentos */
+const documentRoutes = require("./document.routes.js");
 
 // Define las rutas para los usuarios /api/usuarios
 router.use("/users", authenticationMiddleware, userRoutes);
@@ -24,8 +26,10 @@ router.use("/auth", authRoutes);
 
 // Define las rutas para las solicitudes /api/solicitud
 router.use("/solicitud", solocitudRoutes);
-//Define las rutas para los especialistas /api/especialistas
+// Define las rutas para los especialistas /api/especialistas
 router.use("/citas", citaRoutes);
 
+// Define las rutas para los documentos /api/documentos
+router.use("/documents", documentRoutes);
 // Exporta el enrutador
 module.exports = router;
