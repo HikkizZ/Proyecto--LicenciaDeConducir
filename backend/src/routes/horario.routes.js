@@ -7,9 +7,12 @@ const authenticationMiddleware = require("../middlewares/authentication.middlewa
 
 
 //Define las rutas para los horarios
-
+router.post("/", horarioController.createHorario);
 router.get("/", horarioController.getHorarios);
-router.use(authenticationMiddleware);
-router.post("/",authMiddleware.isEspecialista, horarioController.createHorario);
+router.get("/:horarioId", horarioController.getHorarioById);
+router.put("/:horarioId",horarioController.updateHorarioById);
+router.delete("/:horarioId",horarioController.deleteHorarioById);
+
+
 
 module.exports = router;

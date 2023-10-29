@@ -7,8 +7,7 @@ const userRoutes = require("./user.routes.js");
 /** Enrutador de autenticación */
 const authRoutes = require("./auth.routes.js");
 
-/** Enrutador de solicitud*/
-const solicitudRoutes = require("./solicitud.routes.js");
+
 
 /** Middleware de autenticación */
 const authenticationMiddleware = require("../middlewares/authentication.middleware.js");
@@ -24,6 +23,7 @@ const citaRoutes = require("./cita.routes.js");
 //Enrutador de horarios
 const horarioRoutes = require("./horario.routes.js");
 
+
 // Define las rutas para los usuarios /api/usuarios
 router.use("/users", authenticationMiddleware, userRoutes);
 
@@ -37,6 +37,8 @@ router.use("/citas", citaRoutes);
 
 //Define las rutas para los horarios /api/horarios
 router.use("/horarios", horarioRoutes);
+
+
 
 // Exporta el enrutador
 module.exports = router;

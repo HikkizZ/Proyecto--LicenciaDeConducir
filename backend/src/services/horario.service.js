@@ -22,7 +22,23 @@ async function getHorarios() {
 
     }
 
+};
+
+//ver los horarios por id 
+async function getHorarioById(horarioId) {
+    try {
+        const horario = await Horario.findById(horarioId).exec();
+        if (!horario) return [null, "No se encontro el horario"];
+
+        return [horario, null];
+
+    } catch (error) {
+        handleError(error, "horario.service -> getHorarioById");
+
+    }
+
 }
+
 
 /**
  * Crea un nuevo horario en la base de datos
@@ -40,7 +56,7 @@ async function createHorario(horario) {
         const horarioFound = await Horario.findOne({
             Fecha: horario.Fecha
         });
-        if(horarioFound) return [null," El Horario ya esta reservado"];
+        if(horarioFound) return [null," El Horario ya esta registrado"];
         
 
         const newHorario = new Horario ({
@@ -55,9 +71,45 @@ async function createHorario(horario) {
         handleError(error,"horario.service -> createHorario");
 
     }
-}
+};
+
+// actualizar el estado del horario por id
+
+async function updateHorarioById(horarioId, horario) {
+    try {
+        const horarioUpdated = await Horario.findByIdAndUpdate(horarioId, horario, {
+            new: true
+        }).exec();
+        if (!horarioUpdated) return [null, "No se encontro el horario"];
+
+        return [horarioUpdated, null];
+
+    } catch (error) {
+        handleError(error, "horario.service -> updateHorarioById");
+
+    }
+};
+
+// eliminar un horario de la base de datos por id 
+async function deleteHorarioById(horarioId) {
+    try {
+        const horarioDeleted = await Horario.findByIdAndDelete(horarioId).exec();
+        if (!horarioDeleted) return [null, "No se encontro el horario"];
+
+        return [horarioDeleted, null];
+
+    } catch (error) {
+        handleError(error, "horario.service -> deleteHorarioById");
+
+    }
+};
+
 
 module.exports = {
     getHorarios,
     createHorario,
+    getHorarioById,
+    updateHorarioById,
+    deleteHorarioById,
+   
 };
