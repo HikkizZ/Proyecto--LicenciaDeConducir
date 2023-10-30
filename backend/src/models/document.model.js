@@ -13,11 +13,11 @@ const documentSchema = new mongoose.Schema(
     image: {
         type: String,
     },
-    // usuarioId: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "User",
-    //     required: true,
-    // },
+    usuarioId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+    },
     estado: {
         type: String,
         enum: ["pendiente", "aprobado", "rechazado"],
