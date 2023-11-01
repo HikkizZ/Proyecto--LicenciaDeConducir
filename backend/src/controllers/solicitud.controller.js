@@ -82,7 +82,7 @@ async function deleteSolicitud(req, res) {
 }
 
 
-// Actualiza una solicitud por la id de la solicitud
+// Actualiza una solicitud por la _id de la solicitud
 async function updateSolicitud(req, res) {
   try {
       const { params, body } = req;
