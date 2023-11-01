@@ -115,7 +115,7 @@ async function eliminarCita(req, res) {
     }
 };
 
-// Actualizar el estado de una cita
+
 // Actualizar el estado de una cita
 async function actualizarEstadoCita(req, res) {
     const { estado } = req.body;
