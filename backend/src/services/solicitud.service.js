@@ -5,7 +5,7 @@ const Solicitud = require("../models/solicitud.model.js");
 const { handleError } = require("../utils/errorHandler.js");
 
 
-// Crea una solicitud para una id de ususario
+// Crea una solicitud para una id de usuario
 async function createSolicitud(id) {
   try {
 
@@ -56,7 +56,7 @@ async function getSolicitudById(id) {
 }
 
 
-//  obtener solicitud por id de ususario (userId)
+//  obtener solicitud por id de usuario (userId)
 async function getSolicitudByUserId(id) {
   try {
 
