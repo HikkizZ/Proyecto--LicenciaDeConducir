@@ -34,5 +34,11 @@ router.use("/solicitud", solicitudRoutes);
 // Define las rutas para los especialistas /api/especialistas
 router.use("/citas", citaRoutes);
 
+// Define las rutas para los documentos /api/documentos
+//router.use("/documents", documentRoutes);
+
+// Define las rutas para las solicitudes /api/solicitud
+//router.use("/solicitud", solicitudRoutes);
+
 // Exporta el enrutador
 module.exports = router;
