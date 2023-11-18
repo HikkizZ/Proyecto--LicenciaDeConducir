@@ -2,43 +2,45 @@
 
 const Joi = require("joi");
 const currentDate = new Date();
-
+const currentYear = currentDate.getFullYear();
+const endOfYearDate = new Date(currentYear, 11, 31);
 /**
  * Esquema de validación para la creacion de cita.
  * @constant {Object}
  */
 const citaBodySchema = Joi.object({
-    fecha: Joi.date().min(currentDate).required().messages({
+    fecha: Joi.date().min(currentDate).max(endOfYearDate).required().messages({
         "date.base": "La fecha debe ser de tipo date.",
         "date.min": "La fecha no puede ser anterior a la fecha actual.",
-        "any.required": "La fecha es obligatoria."
+        "date.max": "La fecha no puede ser posterior al 31 de diciembre del año actual.",
+        "any.required": "La fecha es obligatoria.",
     }),
     hora: Joi.string().required().messages({
         "string.empty": "La hora no puede estar vacía.",
         "any.required": "La hora es obligatoria.",
-        "string.base": "La hora debe ser de tipo string."
+        "string.base": "La hora debe ser de tipo string.",
     }),
     especialistaId: Joi.string().required().messages({
         "string.empty": "El ID del especialista no puede estar vacío.",
         "any.required": "El ID del especialista es obligatorio.",
-        "string.base": "El ID del especialista debe ser de tipo string."
+        "string.base": "El ID del especialista debe ser de tipo string.",
     }),
     usuarioId: Joi.string().required().messages({
         "string.empty": "El ID del usuario no puede estar vacío.",
         "any.required": "El ID del usuario es obligatorio.",
-        "string.base": "El ID del usuario debe ser de tipo string."
+        "string.base": "El ID del usuario debe ser de tipo string.",
     }),
     estado: Joi.string().valid('Pendiente', 'Confirmada', 'Realizada', 'Cancelada').default('Pendiente').messages({
         "string.base": "El estado debe ser de tipo string.",
-        "any.only": "El estado proporcionado no es válido."
+        "any.only": "El estado proporcionado no es válido.",
     }),
     tipoExamen: Joi.string().valid('Teorico', 'Practico', 'Vista', 'Psicotecnico').required().messages({
         "string.base": "El tipo de examen debe ser de tipo string.",
         "any.required": "El tipo de examen es obligatorio.",
-        "any.only": "El tipo de examen proporcionado no es válido."
-    })
+        "any.only": "El tipo de examen proporcionado no es válido.",
+    }),
 }).messages({
-    "object.unknown": "No se permiten propiedades adicionales."
+    "object.unknown": "No se permiten propiedades adicionales.",
 });
 
 /**
@@ -53,7 +55,7 @@ const citaIdSchema = Joi.object({
             "string.empty": "El id no puede estar vacío.",
             "any.required": "El id es obligatorio.",
             "string.base": "El id debe ser de tipo string.",
-            "string.pattern.base": "El id proporcionado no es un ObjectId válido."
+            "string.pattern.base": "El id proporcionado no es un ObjectId válido.",
         }),
 });
 
@@ -73,14 +75,14 @@ const citaUpdateSchema = Joi.object({
         .messages({
             "string.empty": "La hora no puede estar vacía.",
             "any.required": "La hora es obligatoria.",
-            "string.base": "La hora debe ser de tipo string."
+            "string.base": "La hora debe ser de tipo string.",
         }),
     estado: Joi.string()
         .valid('Pendiente', 'Confirmada', 'Realizada', 'Cancelada')
         .messages({
             "string.base": "El estado debe ser de tipo string.",
-            "any.only": "El estado proporcionado no es válido."
-        })
+            "any.only": "El estado proporcionado no es válido.",
+        }),
 });
 
 module.exports = { citaBodySchema, citaIdSchema, citaUpdateSchema };
