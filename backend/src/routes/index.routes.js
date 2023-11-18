@@ -8,6 +8,12 @@ const userRoutes = require("./user.routes.js");
 /** Enrutador de autenticación */
 const authRoutes = require("./auth.routes.js");
 
+/** Enrutador de documentos */
+//const documentRoutes = require("./document.routes.js");
+
+
+//const solicitudRoutes = require("./solicitud.routes.js");
+
 /** Middleware de autenticación */
 const authenticationMiddleware = require("../middlewares/authentication.middleware.js");
 
@@ -22,8 +28,14 @@ router.use("/users", authenticationMiddleware, userRoutes);
 // Define las rutas para la autenticación /api/auth
 router.use("/auth", authRoutes);
 
-//Define las rutas para los especialistas /api/especialistas
+// Define las rutas para los especialistas /api/especialistas
 router.use("/citas", citaRoutes);
+
+// Define las rutas para los documentos /api/documentos
+//router.use("/documents", documentRoutes);
+
+// Define las rutas para las solicitudes /api/solicitud
+//router.use("/solicitud", solicitudRoutes);
 
 // Exporta el enrutador
 module.exports = router;
