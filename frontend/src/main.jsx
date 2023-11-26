@@ -9,6 +9,7 @@ import CrearCita from './components/citas/CrearCita.jsx'; // Importa CrearCita
 import ListaCitas from './components/citas/ListaCitas.jsx'; // Importa ListaCitas
 import DetalleCita from './components/citas/DetalleCita.jsx'; // Importa DetalleCita
 import ActualizarCita from './components/citas/ActualizarCita.jsx';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const router = createBrowserRouter([
   {

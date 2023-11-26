@@ -1,7 +1,9 @@
+import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../services/auth.service';
 import { AuthProvider, useAuth } from '../context/AuthContext';
+import Header from '../components/Header'; // Importa el componente Header
 
 function Root() {
   return (
@@ -13,22 +15,19 @@ function Root() {
 
 function PageRoot() {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handleLogout = () => {
     logout();
     navigate('/auth');
   };
 
-  const { user } = useAuth();
-
   return (
     <div>
-      <div>
-        <h1>Aqui deberia ir un header</h1>
-        <p>Estas logeado como: {user.email}</p>
-        <button onClick={handleLogout}>Cerrar sesion</button>
+      <Header user={user} onLogout={handleLogout} /> {/* Usa el componente Header */}
+      <div className="container mt-4"> {/* Contenedor para el contenido principal */}
+        <Outlet /> {/* Aquí se renderizarán las rutas anidadas */}
       </div>
-      <Outlet />
     </div>
   );
 }
