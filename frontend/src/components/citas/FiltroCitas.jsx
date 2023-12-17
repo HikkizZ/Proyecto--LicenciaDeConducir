@@ -1,41 +1,64 @@
-import React, { useState } from 'react';
+// FiltroCitas.jsx
+import React, { useState, useEffect } from 'react';
+import axios from '../../services/root.service';
 
-function FiltroCitas({ onFiltrarUsuario, onFiltrarEspecialista }) {
-  const [tipoFiltro, setTipoFiltro] = useState('usuario');
-  const [id, setId] = useState('');
+function FiltroCitas({ onBuscarCitas }) {
+  const [usuarios, setUsuarios] = useState([]);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (tipoFiltro === 'usuario') {
-      onFiltrarUsuario(id);
-    } else {
-      onFiltrarEspecialista(id);
-    }
+  useEffect(() => {
+    const obtenerUsuarios = async () => {
+      try {
+        const response = await axios.get('/users');
+        if (response.data && Array.isArray(response.data.data)) {
+          setUsuarios(response.data.data);
+        } else {
+          setError('Error al cargar usuarios');
+        }
+      } catch (error) {
+        setError('Error al cargar usuarios');
+      }
+    };
+
+    obtenerUsuarios();
+  }, []);
+
+  const handleSeleccionarUsuario = (usuarioId) => {
+    const usuarioSeleccionado = usuarios.find(user => user._id === usuarioId);
+    if (!usuarioSeleccionado) return;
+
+    const esEspecialista = usuarioSeleccionado.roles.some(rol => rol.name === 'especialista');
+    const tipoBusqueda = esEspecialista ? 'especialista' : 'usuario';
+
+    onBuscarCitas(tipoBusqueda, usuarioId);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-4">
-      <div className="row g-3 align-items-center">
-        <div className="col-auto">
-          <select className="form-select" value={tipoFiltro} onChange={(e) => setTipoFiltro(e.target.value)}>
-            <option value="usuario">Usuario</option>
-            <option value="especialista">Especialista</option>
-          </select>
-        </div>
-        <div className="col-auto">
-          <input
-            type="text"
-            className="form-control"
-            value={id}
-            onChange={(e) => setId(e.target.value)}
-            placeholder="Ingrese ID"
-          />
-        </div>
-        <div className="col-auto">
-          <button type="submit" className="btn btn-primary">Filtrar</button>
-        </div>
-      </div>
-    </form>
+    <div>
+      {error && <div className="alert alert-danger">{error}</div>}
+      <table className="table table-striped table-hover">
+        <thead className="thead-dark">
+          <tr>
+            <th>Username</th>
+            <th>Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          {usuarios.map((usuario) => (
+            <tr key={usuario._id}>
+              <td>{usuario.username}</td>
+              <td 
+                className="text-primary" 
+                style={{ cursor: 'pointer' }} 
+                onClick={() => handleSeleccionarUsuario(usuario._id)}
+              >
+                {usuario.email}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
