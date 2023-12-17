@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { logout } from '../services/auth.service';
 import logo from '../assets/logo.png';
 import { useAuth } from '../context/AuthContext'; // Importa useAuth
+import { logout } from '../services/auth.service';
 
 function Header() {
   const navigate = useNavigate();
@@ -33,6 +33,9 @@ function Header() {
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/citas">Especialista</Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/subir-archivo">Subir archivos</Link>
             </li>
             {/* Agrega más elementos de navegación según sea necesario */}
           </ul>
