@@ -1,63 +1,45 @@
-import React, { useState, useEffect } from 'react';
+// ListaCitas.jsx
+import React, { useState } from 'react';
 import axios from '../../services/root.service';
 import FiltroCitas from './FiltroCitas';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function ListaCitas() {
   const [citas, setCitas] = useState([]);
   const [error, setError] = useState('');
-  const [redirectToLogin, setRedirectToLogin] = useState(false);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (redirectToLogin) {
-      const timer = setTimeout(() => {
-        navigate('/');
-      }, 3000); // Redirige después de 3 segundos
-
-      return () => clearTimeout(timer);
-    }
-  }, [redirectToLogin, navigate]);
 
   const handleErrorResponse = (error) => {
-    if (error.response && error.response.status === 401) {
-      setError('Acceso denegado. Serás redirigido a la página de inicio.');
-      setRedirectToLogin(true);
-    } else {
-      console.error('Error al obtener citas:', error);
-      setError('Error al obtener citas.');
-    }
+    // ... Manejo de errores ...
   };
 
-  const obtenerCitasPorUsuario = async (usuarioId) => {
+  const buscarCitas = async (tipo, id) => {
+    if (!id) return;
+
     try {
-      const response = await axios.get(`/citas/usuario/${usuarioId}`);
+      const endpoint = tipo === 'usuario' ? `/citas/usuario/${id}` : `/citas/especialista/${id}`;
+      const response = await axios.get(endpoint);
       setCitas(response.data);
     } catch (error) {
       handleErrorResponse(error);
     }
   };
 
-  const obtenerCitasPorEspecialista = async (especialistaId) => {
-    try {
-      const response = await axios.get(`/citas/especialista/${especialistaId}`);
-      setCitas(response.data);
-    } catch (error) {
-      handleErrorResponse(error);
-    }
+  const formatearFecha = (fecha) => {
+    const fechaObj = new Date(fecha);
+    return fechaObj.toLocaleDateString('es-ES', { day: 'numeric', month: 'numeric', year: 'numeric' });
   };
 
   return (
     <div className="container mt-4">
       {error && <div className="alert alert-danger">{error}</div>}
-      <FiltroCitas onFiltrarUsuario={obtenerCitasPorUsuario} onFiltrarEspecialista={obtenerCitasPorEspecialista} />
+      <FiltroCitas onBuscarCitas={buscarCitas} />
       <div className="row">
         {citas.map((cita) => (
           <div key={cita._id} className="col-md-4 mb-3">
             <div className="card">
               <div className="card-body">
                 <h5 className="card-title">Cita</h5>
-                <p className="card-text">Fecha: {cita.fecha}</p>
+                <p className="card-text">Fecha: {formatearFecha(cita.fecha)}</p>
                 <p className="card-text">Hora: {cita.hora}</p>
                 <Link to={`/cita/${cita._id}`} className="btn btn-primary">
                   Ver Detalles

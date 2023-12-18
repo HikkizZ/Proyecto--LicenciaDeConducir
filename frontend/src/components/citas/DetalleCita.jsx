@@ -44,11 +44,21 @@ function DetalleCita() {
 
   const handleUpdate = () => {
     navigate(`/actualizar-cita/${id}`); // Redirige a la página de actualización de cita
+  }
+
+  const formatearFecha = (fecha) => {
+    const fechaObj = new Date(fecha);
+    return fechaObj.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
   };
 
   if (!cita) {
     return <div className="text-center">Cargando detalles de la cita...</div>;
   }
+  
+  const formatFecha = (fecha) => {
+  const fechaObj = new Date(fecha);
+    return fechaObj.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+  };
 
   return (
     <div className="container mt-5">
@@ -56,12 +66,34 @@ function DetalleCita() {
       <h2 className="mb-4">Detalle de Cita</h2>
       <div className="card">
         <div className="card-body">
-          <p>Fecha: {cita.fecha}</p>
-          <p>Hora: {cita.hora}</p>
-          <p>Especialista ID: {cita.especialistaId}</p>
-          <p>Usuario ID: {cita.usuarioId}</p>
-          <p>Estado: {cita.estado}</p>
-          <p>Tipo de Examen: {cita.tipoExamen}</p>
+          <table className="table table-bordered">
+            <tbody>
+              <tr>
+                <th>Fecha</th>
+                <td>{formatFecha(cita.fecha)}</td>
+              </tr>
+              <tr>
+                <th>Hora</th>
+                <td>{cita.hora}</td>
+              </tr>
+              <tr>
+                <th>Especialista ID</th>
+                <td>{cita.especialistaId}</td>
+              </tr>
+              <tr>
+                <th>Usuario ID</th>
+                <td>{cita.usuarioId}</td>
+              </tr>
+              <tr>
+                <th>Estado</th>
+                <td>{cita.estado}</td>
+              </tr>
+              <tr>
+                <th>Tipo de Examen</th>
+                <td>{cita.tipoExamen}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
       <div className="mt-3">
